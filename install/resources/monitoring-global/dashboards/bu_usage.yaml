@@ -28,111 +28,11 @@ spec:
             "editable": true,
             "gnetId": null,
             "graphTooltip": 0,
-            "id": 2,
-            "iteration": 1614854242264,
+            "id": 7,
             "links": [],
             "panels": [
                 {
-                "aliasColors": {},
-                "bars": false,
-                "dashLength": 10,
-                "dashes": false,
-                "datasource": "stage-cluster",
-                "fieldConfig": {
-                    "defaults": {
-                    "custom": {},
-                    "unit": "Bps"
-                    },
-                    "overrides": []
-                },
-                "fill": 1,
-                "fillGradient": 0,
-                "gridPos": {
-                    "h": 8,
-                    "w": 12,
-                    "x": 0,
-                    "y": 0
-                },
-                "hiddenSeries": false,
-                "id": 5,
-                "legend": {
-                    "avg": false,
-                    "current": false,
-                    "max": false,
-                    "min": false,
-                    "show": true,
-                    "total": false,
-                    "values": false
-                },
-                "lines": true,
-                "linewidth": 1,
-                "nullPointMode": "null",
-                "percentage": false,
-                "pluginVersion": "7.1.1",
-                "pointradius": 2,
-                "points": false,
-                "renderer": "flot",
-                "seriesOverrides": [],
-                "spaceLength": 10,
-                "stack": false,
-                "steppedLine": false,
-                "targets": [
-                    {
-                    "expr": "sum(rate(kafka_server_brokertopicmetrics_bytes_in_total{namespace=\"$namespace\"}[1m])/60) by (topic)",
-                    "instant": false,
-                    "interval": "",
-                    "legendFormat": "{{topic}}",
-                    "refId": "A"
-                    }
-                ],
-                "thresholds": [],
-                "timeFrom": null,
-                "timeRegions": [],
-                "timeShift": null,
-                "title": "Ingress rate",
-                "tooltip": {
-                    "shared": true,
-                    "sort": 0,
-                    "value_type": "individual"
-                },
-                "type": "graph",
-                "xaxis": {
-                    "buckets": null,
-                    "mode": "time",
-                    "name": null,
-                    "show": true,
-                    "values": []
-                },
-                "yaxes": [
-                    {
-                    "format": "Bps",
-                    "label": null,
-                    "logBase": 1,
-                    "max": null,
-                    "min": null,
-                    "show": true
-                    },
-                    {
-                    "format": "short",
-                    "label": null,
-                    "logBase": 1,
-                    "max": null,
-                    "min": null,
-                    "show": true
-                    }
-                ],
-                "yaxis": {
-                    "align": false,
-                    "alignLevel": null
-                }
-                },
-                {
-                "aliasColors": {},
-                "bars": false,
-                "cacheTimeout": null,
-                "dashLength": 10,
-                "dashes": false,
-                "datasource": "stage-cluster",
+                "datasource": "Observatorium-Metrics",
                 "fieldConfig": {
                     "defaults": {
                     "custom": {
@@ -143,230 +43,320 @@ spec:
                         "mode": "absolute",
                         "steps": [
                         {
-                            "color": "blue",
+                            "color": "green",
+                            "value": null
+                        },
+                        {
+                            "color": "red",
+                            "value": 80
+                        }
+                        ]
+                    }
+                    },
+                    "overrides": [
+                    {
+                        "matcher": {
+                        "id": "byName",
+                        "options": "Namespace"
+                        },
+                        "properties": [
+                        {
+                            "id": "custom.width",
+                            "value": 263
+                        }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                        "id": "byName",
+                        "options": "Topics"
+                        },
+                        "properties": [
+                        {
+                            "id": "custom.width",
+                            "value": 71
+                        }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                        "id": "byName",
+                        "options": "Messages"
+                        },
+                        "properties": [
+                        {
+                            "id": "custom.width",
+                            "value": 112
+                        }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                        "id": "byName",
+                        "options": "Partitions"
+                        },
+                        "properties": [
+                        {
+                            "id": "custom.width",
+                            "value": 100
+                        }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                        "id": "byName",
+                        "options": "Network Transmit Bytes (24h)"
+                        },
+                        "properties": [
+                        {
+                            "id": "custom.width",
+                            "value": 246
+                        },
+                        {
+                            "id": "unit",
+                            "value": "decbytes"
+                        }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                        "id": "byName",
+                        "options": "Network Receive Bytes (24h)"
+                        },
+                        "properties": [
+                        {
+                            "id": "custom.width",
+                            "value": 213
+                        },
+                        {
+                            "id": "unit",
+                            "value": "decbytes"
+                        }
+                        ]
+                    }
+                    ]
+                },
+                "gridPos": {
+                    "h": 11,
+                    "w": 15,
+                    "x": 0,
+                    "y": 0
+                },
+                "id": 36,
+                "options": {
+                    "showHeader": true,
+                    "sortBy": []
+                },
+                "pluginVersion": "7.1.1",
+                "targets": [
+                    {
+                    "expr": "count(kafka_topic_partitions{namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\",namespace !~ \".*minio.*\"}) by (namespace) ",
+                    "format": "table",
+                    "instant": true,
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "A"
+                    },
+                    {
+                    "expr": "sum(kafka_topic_partition_current_offset{namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\",namespace !~ \".*minio.*\"}) by (namespace)",
+                    "format": "table",
+                    "instant": true,
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "B"
+                    },
+                    {
+                    "expr": "sum(kube_pod_info{namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\",namespace !~ \".*minio.*\"}) by (namespace)",
+                    "format": "table",
+                    "instant": true,
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "C"
+                    },
+                    {
+                    "expr": "sum(kafka_topic_partitions{namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\", namespace !~ \".*minio.*\"}) by (namespace)",
+                    "format": "table",
+                    "instant": true,
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "D"
+                    },
+                    {
+                    "expr": "sum(container_network_transmit_bytes_total{ container!= \"\",namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\",namespace !~ \".*minio.*\"}) by (namespace)",
+                    "format": "table",
+                    "instant": true,
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "E"
+                    },
+                    {
+                    "expr": "sum(container_network_receive_bytes_total{ container!= \"\",namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\",namespace !~ \".*minio.*\"}) by (namespace)",
+                    "format": "table",
+                    "instant": true,
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "F"
+                    }
+                ],
+                "timeFrom": null,
+                "timeShift": null,
+                "title": "Cluster Metrics",
+                "transformations": [
+                    {
+                    "id": "seriesToColumns",
+                    "options": {
+                        "byField": "namespace"
+                    }
+                    },
+                    {
+                    "id": "organize",
+                    "options": {
+                        "excludeByName": {
+                        "Time": true,
+                        "Value #C": true
+                        },
+                        "indexByName": {
+                        "Time": 6,
+                        "Value #A": 1,
+                        "Value #B": 2,
+                        "Value #C": 7,
+                        "Value #D": 3,
+                        "Value #E": 4,
+                        "Value #F": 5,
+                        "namespace": 0
+                        },
+                        "renameByName": {
+                        "Value #A": "Topics",
+                        "Value #B": "Messages",
+                        "Value #C": "",
+                        "Value #D": "Partitions",
+                        "Value #E": "Network Transmit Bytes (24h)",
+                        "Value #F": "Network Receive Bytes (24h)",
+                        "namespace": "Namespace"
+                        }
+                    }
+                    }
+                ],
+                "type": "table"
+                },
+                {
+                "collapsed": false,
+                "datasource": null,
+                "gridPos": {
+                    "h": 1,
+                    "w": 24,
+                    "x": 0,
+                    "y": 11
+                },
+                "id": 6,
+                "panels": [],
+                "title": "Overview",
+                "type": "row"
+                },
+                {
+                "datasource": "Observatorium-Metrics",
+                "fieldConfig": {
+                    "defaults": {
+                    "custom": {
+                        "align": null
+                    },
+                    "displayName": "",
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                        {
+                            "color": "green",
                             "value": null
                         }
                         ]
                     },
-                    "unit": "m/s"
+                    "unit": "none"
                     },
                     "overrides": []
                 },
-                "fill": 1,
-                "fillGradient": 0,
                 "gridPos": {
-                    "h": 8,
-                    "w": 12,
-                    "x": 12,
-                    "y": 0
+                    "h": 12,
+                    "w": 3,
+                    "x": 0,
+                    "y": 12
                 },
-                "hiddenSeries": false,
-                "id": 3,
-                "interval": null,
-                "legend": {
-                    "avg": false,
-                    "current": false,
-                    "max": false,
-                    "min": false,
-                    "show": true,
-                    "total": false,
+                "id": 32,
+                "options": {
+                    "colorMode": "value",
+                    "graphMode": "none",
+                    "justifyMode": "center",
+                    "orientation": "auto",
+                    "reduceOptions": {
+                    "calcs": [
+                        "mean"
+                    ],
+                    "fields": "",
                     "values": false
+                    },
+                    "textMode": "auto"
                 },
-                "lines": true,
-                "linewidth": 1,
-                "links": [],
-                "maxDataPoints": 1000,
-                "nullPointMode": "null",
-                "percentage": false,
                 "pluginVersion": "7.1.1",
-                "pointradius": 2,
-                "points": false,
-                "renderer": "flot",
-                "seriesOverrides": [],
-                "spaceLength": 10,
-                "stack": false,
-                "steppedLine": false,
                 "targets": [
                     {
-                    "expr": "sum(rate(kafka_server_brokertopicmetrics_messages_in_total{namespace=\"$namespace\"}[1m])/60) by (topic)",
-                    "format": "time_series",
-                    "instant": false,
+                    "expr": "max_over_time(strimzi_resources{kind=~\"Kafka\"}[24h] offset 24h)",
+                    "instant": true,
                     "interval": "",
-                    "intervalFactor": 2,
-                    "legendFormat": "{{topic}}",
+                    "legendFormat": "48h to 24h ago",
+                    "refId": "A"
+                    },
+                    {
+                    "expr": "max_over_time(strimzi_resources{kind=~\"Kafka\"}[24h])",
+                    "hide": false,
+                    "instant": true,
+                    "interval": "",
+                    "legendFormat": "last 24h",
+                    "refId": "C"
+                    },
+                    {
+                    "expr": "max_over_time(strimzi_resources{kind=~\"Kafka\"}[24h]) + max_over_time(strimzi_resources{kind=~\"Kafka\"}[24h] offset 24h)",
+                    "instant": true,
+                    "interval": "",
+                    "legendFormat": "last 48h",
                     "refId": "B"
                     }
                 ],
-                "thresholds": [],
                 "timeFrom": null,
-                "timeRegions": [],
                 "timeShift": null,
-                "title": "Messages rate per topic",
-                "tooltip": {
-                    "shared": true,
-                    "sort": 0,
-                    "value_type": "individual"
-                },
-                "type": "graph",
-                "xaxis": {
-                    "buckets": null,
-                    "mode": "time",
-                    "name": null,
-                    "show": true,
-                    "values": []
-                },
-                "yaxes": [
-                    {
-                    "format": "m/s",
-                    "label": null,
-                    "logBase": 1,
-                    "max": null,
-                    "min": null,
-                    "show": true
-                    },
-                    {
-                    "format": "short",
-                    "label": null,
-                    "logBase": 1,
-                    "max": null,
-                    "min": null,
-                    "show": true
-                    }
-                ],
-                "yaxis": {
-                    "align": false,
-                    "alignLevel": null
-                }
+                "title": "Max Kafka clusters",
+                "type": "stat"
                 },
                 {
-                "aliasColors": {},
-                "bars": false,
-                "dashLength": 10,
-                "dashes": false,
-                "datasource": "stage-cluster",
+                "datasource": "Observatorium-Metrics",
+                "description": "",
                 "fieldConfig": {
                     "defaults": {
                     "custom": {},
-                    "unit": "Bps"
-                    },
-                    "overrides": []
-                },
-                "fill": 1,
-                "fillGradient": 0,
-                "gridPos": {
-                    "h": 8,
-                    "w": 12,
-                    "x": 0,
-                    "y": 8
-                },
-                "hiddenSeries": false,
-                "id": 6,
-                "legend": {
-                    "avg": false,
-                    "current": false,
-                    "max": false,
-                    "min": false,
-                    "show": true,
-                    "total": false,
-                    "values": false
-                },
-                "lines": true,
-                "linewidth": 1,
-                "nullPointMode": "null",
-                "percentage": false,
-                "pluginVersion": "7.1.1",
-                "pointradius": 2,
-                "points": false,
-                "renderer": "flot",
-                "seriesOverrides": [],
-                "spaceLength": 10,
-                "stack": false,
-                "steppedLine": false,
-                "targets": [
-                    {
-                    "expr": "sum(rate(kafka_server_brokertopicmetrics_bytes_out_total{namespace=\"$namespace\"}[1m])/60) by (topic)",
-                    "instant": false,
-                    "interval": "",
-                    "legendFormat": "{{topic}}",
-                    "refId": "A"
-                    }
-                ],
-                "thresholds": [],
-                "timeFrom": null,
-                "timeRegions": [],
-                "timeShift": null,
-                "title": "Egress rate",
-                "tooltip": {
-                    "shared": true,
-                    "sort": 0,
-                    "value_type": "individual"
-                },
-                "type": "graph",
-                "xaxis": {
-                    "buckets": null,
-                    "mode": "time",
-                    "name": null,
-                    "show": true,
-                    "values": []
-                },
-                "yaxes": [
-                    {
-                    "format": "Bps",
-                    "label": null,
-                    "logBase": 1,
-                    "max": null,
-                    "min": null,
-                    "show": true
-                    },
-                    {
-                    "format": "short",
-                    "label": null,
-                    "logBase": 1,
-                    "max": null,
-                    "min": null,
-                    "show": true
-                    }
-                ],
-                "yaxis": {
-                    "align": false,
-                    "alignLevel": null
-                }
-                },
-                {
-                "cacheTimeout": null,
-                "datasource": "stage-cluster",
-                "fieldConfig": {
-                    "defaults": {
-                    "custom": {
-                        "align": null
-                    },
+                    "decimals": 0,
                     "mappings": [],
                     "thresholds": {
                         "mode": "absolute",
                         "steps": [
                         {
-                            "color": "blue",
+                            "color": "green",
                             "value": null
                         }
                         ]
                     },
-                    "unit": "m/s"
+                    "unit": "none"
                     },
                     "overrides": []
                 },
                 "gridPos": {
-                    "h": 8,
-                    "w": 12,
-                    "x": 12,
-                    "y": 8
+                    "h": 6,
+                    "w": 4,
+                    "x": 3,
+                    "y": 12
                 },
-                "id": 7,
-                "interval": null,
-                "links": [],
-                "maxDataPoints": 1000,
+                "id": 9,
                 "options": {
                     "colorMode": "value",
-                    "graphMode": "area",
+                    "graphMode": "none",
                     "justifyMode": "auto",
                     "orientation": "auto",
                     "reduceOptions": {
@@ -381,131 +371,783 @@ spec:
                 "pluginVersion": "7.1.1",
                 "targets": [
                     {
-                    "expr": "sum(kafka_server_brokertopicmetrics_messages_in_total{namespace=\"$namespace\"}) by (topic)",
-                    "format": "time_series",
-                    "instant": false,
+                    "expr": "count(cluster_version{type=\"completed\"}) by (version,cluster_id) * on (cluster_id) group_left () count(subscription_sync_total{installed=~\"^strimzi.*$\"}) by (cluster_id)",
+                    "instant": true,
                     "interval": "",
-                    "intervalFactor": 2,
-                    "legendFormat": "{{topic}}",
-                    "refId": "B"
+                    "legendFormat": "",
+                    "refId": "A"
                     }
                 ],
                 "timeFrom": null,
                 "timeShift": null,
-                "title": "Total messages per topic",
+                "title": "Current Openshift Clusters",
                 "type": "stat"
+                },
+                {
+                "aliasColors": {},
+                "bars": false,
+                "dashLength": 10,
+                "dashes": false,
+                "datasource": "Observatorium-Metrics",
+                "description": "",
+                "fieldConfig": {
+                    "defaults": {
+                    "custom": {},
+                    "decimals": 0,
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                        {
+                            "color": "green",
+                            "value": null
+                        }
+                        ]
+                    },
+                    "unit": "none"
+                    },
+                    "overrides": []
+                },
+                "fill": 1,
+                "fillGradient": 0,
+                "gridPos": {
+                    "h": 6,
+                    "w": 8,
+                    "x": 7,
+                    "y": 12
+                },
+                "hiddenSeries": false,
+                "id": 26,
+                "legend": {
+                    "avg": false,
+                    "current": false,
+                    "max": false,
+                    "min": false,
+                    "show": false,
+                    "total": false,
+                    "values": false
+                },
+                "lines": true,
+                "linewidth": 1,
+                "nullPointMode": "null",
+                "percentage": false,
+                "pluginVersion": "7.1.1",
+                "pointradius": 2,
+                "points": false,
+                "renderer": "flot",
+                "seriesOverrides": [],
+                "spaceLength": 10,
+                "stack": false,
+                "steppedLine": false,
+                "targets": [
+                    {
+                    "expr": "count(cluster_version{type=\"completed\"}) by (version,cluster_id) * on (cluster_id) group_left () count(subscription_sync_total{installed=~\"^strimzi.*$\"}) by (cluster_id)",
+                    "interval": "",
+                    "intervalFactor": 1,
+                    "legendFormat": "clusters",
+                    "refId": "A"
+                    }
+                ],
+                "thresholds": [],
+                "timeFrom": null,
+                "timeRegions": [],
+                "timeShift": null,
+                "title": "Openshift Clusters",
+                "tooltip": {
+                    "shared": true,
+                    "sort": 0,
+                    "value_type": "individual"
+                },
+                "type": "graph",
+                "xaxis": {
+                    "buckets": null,
+                    "mode": "time",
+                    "name": null,
+                    "show": true,
+                    "values": []
+                },
+                "yaxes": [
+                    {
+                    "decimals": 0,
+                    "format": "none",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": "0",
+                    "show": true
+                    },
+                    {
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": true
+                    }
+                ],
+                "yaxis": {
+                    "align": false,
+                    "alignLevel": null
+                }
+                },
+                {
+                "datasource": "Observatorium-Metrics",
+                "description": "",
+                "fieldConfig": {
+                    "defaults": {
+                    "custom": {},
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                        {
+                            "color": "green",
+                            "value": null
+                        }
+                        ]
+                    },
+                    "unit": "messages"
+                    },
+                    "overrides": []
+                },
+                "gridPos": {
+                    "h": 4,
+                    "w": 3,
+                    "x": 15,
+                    "y": 12
+                },
+                "id": 4,
+                "options": {
+                    "colorMode": "value",
+                    "graphMode": "none",
+                    "justifyMode": "auto",
+                    "orientation": "horizontal",
+                    "reduceOptions": {
+                    "calcs": [
+                        "mean"
+                    ],
+                    "fields": "",
+                    "values": false
+                    },
+                    "textMode": "auto"
+                },
+                "pluginVersion": "7.1.1",
+                "targets": [
+                    {
+                    "expr": "sum(kafka_server_brokertopicmetrics_messages_in_total)",
+                    "instant": true,
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "A"
+                    }
+                ],
+                "timeFrom": null,
+                "timeShift": null,
+                "title": "Total input Messages",
+                "type": "stat"
+                },
+                {
+                "aliasColors": {},
+                "bars": false,
+                "dashLength": 10,
+                "dashes": false,
+                "datasource": "Observatorium-Metrics",
+                "description": "",
+                "fieldConfig": {
+                    "defaults": {
+                    "custom": {},
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                        {
+                            "color": "green",
+                            "value": null
+                        }
+                        ]
+                    },
+                    "unit": "none"
+                    },
+                    "overrides": []
+                },
+                "fill": 1,
+                "fillGradient": 0,
+                "gridPos": {
+                    "h": 4,
+                    "w": 6,
+                    "x": 18,
+                    "y": 12
+                },
+                "hiddenSeries": false,
+                "id": 28,
+                "legend": {
+                    "avg": false,
+                    "current": false,
+                    "max": false,
+                    "min": false,
+                    "show": false,
+                    "total": false,
+                    "values": false
+                },
+                "lines": true,
+                "linewidth": 1,
+                "nullPointMode": "null",
+                "percentage": false,
+                "pluginVersion": "7.1.1",
+                "pointradius": 2,
+                "points": false,
+                "renderer": "flot",
+                "seriesOverrides": [],
+                "spaceLength": 10,
+                "stack": false,
+                "steppedLine": false,
+                "targets": [
+                    {
+                    "expr": "sum(kafka_server_brokertopicmetrics_messages_in_total)",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "messages",
+                    "refId": "A"
+                    }
+                ],
+                "thresholds": [],
+                "timeFrom": null,
+                "timeRegions": [],
+                "timeShift": null,
+                "title": "Input Messages",
+                "tooltip": {
+                    "shared": true,
+                    "sort": 0,
+                    "value_type": "individual"
+                },
+                "type": "graph",
+                "xaxis": {
+                    "buckets": null,
+                    "mode": "time",
+                    "name": null,
+                    "show": true,
+                    "values": []
+                },
+                "yaxes": [
+                    {
+                    "decimals": 0,
+                    "format": "none",
+                    "label": "",
+                    "logBase": 1,
+                    "max": null,
+                    "min": "0",
+                    "show": true
+                    },
+                    {
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": true
+                    }
+                ],
+                "yaxis": {
+                    "align": false,
+                    "alignLevel": null
+                }
+                },
+                {
+                "datasource": "Observatorium-Metrics",
+                "description": "",
+                "fieldConfig": {
+                    "defaults": {
+                    "custom": {},
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                        {
+                            "color": "green",
+                            "value": null
+                        }
+                        ]
+                    },
+                    "unit": "decbytes"
+                    },
+                    "overrides": []
+                },
+                "gridPos": {
+                    "h": 4,
+                    "w": 3,
+                    "x": 15,
+                    "y": 16
+                },
+                "id": 24,
+                "options": {
+                    "colorMode": "value",
+                    "graphMode": "none",
+                    "justifyMode": "auto",
+                    "orientation": "auto",
+                    "reduceOptions": {
+                    "calcs": [
+                        "mean"
+                    ],
+                    "fields": "",
+                    "values": false
+                    },
+                    "textMode": "auto"
+                },
+                "pluginVersion": "7.1.1",
+                "targets": [
+                    {
+                    "expr": "sum(kafka_server_brokertopicmetrics_bytes_in_total)",
+                    "instant": true,
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "A"
+                    }
+                ],
+                "timeFrom": null,
+                "timeShift": null,
+                "title": "Total input bytes",
+                "type": "stat"
+                },
+                {
+                "aliasColors": {},
+                "bars": false,
+                "dashLength": 10,
+                "dashes": false,
+                "datasource": "Observatorium-Metrics",
+                "description": "",
+                "fieldConfig": {
+                    "defaults": {
+                    "custom": {},
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                        {
+                            "color": "green",
+                            "value": null
+                        }
+                        ]
+                    },
+                    "unit": "Bps"
+                    },
+                    "overrides": []
+                },
+                "fill": 1,
+                "fillGradient": 0,
+                "gridPos": {
+                    "h": 4,
+                    "w": 6,
+                    "x": 18,
+                    "y": 16
+                },
+                "hiddenSeries": false,
+                "id": 29,
+                "legend": {
+                    "avg": false,
+                    "current": false,
+                    "max": false,
+                    "min": false,
+                    "show": false,
+                    "total": false,
+                    "values": false
+                },
+                "lines": true,
+                "linewidth": 1,
+                "nullPointMode": "null",
+                "percentage": false,
+                "pluginVersion": "7.1.1",
+                "pointradius": 2,
+                "points": false,
+                "renderer": "flot",
+                "seriesOverrides": [],
+                "spaceLength": 10,
+                "stack": false,
+                "steppedLine": false,
+                "targets": [
+                    {
+                    "expr": "sum(rate(kafka_server_brokertopicmetrics_bytes_in_total[1m])*60)",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "data",
+                    "refId": "A"
+                    }
+                ],
+                "thresholds": [],
+                "timeFrom": null,
+                "timeRegions": [],
+                "timeShift": null,
+                "title": "Input throughput",
+                "tooltip": {
+                    "shared": true,
+                    "sort": 0,
+                    "value_type": "individual"
+                },
+                "type": "graph",
+                "xaxis": {
+                    "buckets": null,
+                    "mode": "time",
+                    "name": null,
+                    "show": true,
+                    "values": []
+                },
+                "yaxes": [
+                    {
+                    "format": "Bps",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": "0",
+                    "show": true
+                    },
+                    {
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": false
+                    }
+                ],
+                "yaxis": {
+                    "align": false,
+                    "alignLevel": null
+                }
+                },
+                {
+                "datasource": "Observatorium-Metrics",
+                "description": "",
+                "fieldConfig": {
+                    "defaults": {
+                    "custom": {},
+                    "decimals": 0,
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                        {
+                            "color": "green",
+                            "value": null
+                        }
+                        ]
+                    },
+                    "unit": "none"
+                    },
+                    "overrides": []
+                },
+                "gridPos": {
+                    "h": 6,
+                    "w": 4,
+                    "x": 3,
+                    "y": 18
+                },
+                "id": 16,
+                "options": {
+                    "colorMode": "value",
+                    "graphMode": "none",
+                    "justifyMode": "auto",
+                    "orientation": "auto",
+                    "reduceOptions": {
+                    "calcs": [
+                        "mean"
+                    ],
+                    "fields": "",
+                    "values": false
+                    },
+                    "textMode": "auto"
+                },
+                "pluginVersion": "7.1.1",
+                "targets": [
+                    {
+                    "expr": "sum(strimzi_resources{kind=~\"Kafka\"})",
+                    "instant": true,
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "A"
+                    }
+                ],
+                "timeFrom": null,
+                "timeShift": null,
+                "title": "Current Kafka Clusters",
+                "type": "stat"
+                },
+                {
+                "aliasColors": {},
+                "bars": false,
+                "dashLength": 10,
+                "dashes": false,
+                "datasource": "Observatorium-Metrics",
+                "description": "",
+                "fieldConfig": {
+                    "defaults": {
+                    "custom": {},
+                    "decimals": 0,
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                        {
+                            "color": "green",
+                            "value": null
+                        }
+                        ]
+                    },
+                    "unit": "none"
+                    },
+                    "overrides": []
+                },
+                "fill": 1,
+                "fillGradient": 0,
+                "gridPos": {
+                    "h": 6,
+                    "w": 8,
+                    "x": 7,
+                    "y": 18
+                },
+                "hiddenSeries": false,
+                "id": 27,
+                "legend": {
+                    "avg": false,
+                    "current": false,
+                    "max": false,
+                    "min": false,
+                    "show": false,
+                    "total": false,
+                    "values": false
+                },
+                "lines": true,
+                "linewidth": 1,
+                "nullPointMode": "null",
+                "percentage": false,
+                "pluginVersion": "7.1.1",
+                "pointradius": 2,
+                "points": false,
+                "renderer": "flot",
+                "seriesOverrides": [],
+                "spaceLength": 10,
+                "stack": false,
+                "steppedLine": false,
+                "targets": [
+                    {
+                    "expr": "sum(strimzi_resources{kind=~\"Kafka\"})",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "clusters",
+                    "refId": "A"
+                    }
+                ],
+                "thresholds": [],
+                "timeFrom": null,
+                "timeRegions": [],
+                "timeShift": null,
+                "title": "Kafka Clusters",
+                "tooltip": {
+                    "shared": true,
+                    "sort": 0,
+                    "value_type": "individual"
+                },
+                "type": "graph",
+                "xaxis": {
+                    "buckets": null,
+                    "mode": "time",
+                    "name": null,
+                    "show": true,
+                    "values": []
+                },
+                "yaxes": [
+                    {
+                    "decimals": 0,
+                    "format": "none",
+                    "label": "",
+                    "logBase": 1,
+                    "max": null,
+                    "min": "0",
+                    "show": true
+                    },
+                    {
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": true
+                    }
+                ],
+                "yaxis": {
+                    "align": false,
+                    "alignLevel": null
+                }
+                },
+                {
+                "datasource": "Observatorium-Metrics",
+                "description": "",
+                "fieldConfig": {
+                    "defaults": {
+                    "custom": {},
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                        {
+                            "color": "green",
+                            "value": null
+                        }
+                        ]
+                    },
+                    "unit": "decbytes"
+                    },
+                    "overrides": []
+                },
+                "gridPos": {
+                    "h": 4,
+                    "w": 3,
+                    "x": 15,
+                    "y": 20
+                },
+                "id": 25,
+                "options": {
+                    "colorMode": "value",
+                    "graphMode": "none",
+                    "justifyMode": "auto",
+                    "orientation": "auto",
+                    "reduceOptions": {
+                    "calcs": [
+                        "mean"
+                    ],
+                    "fields": "",
+                    "values": false
+                    },
+                    "textMode": "auto"
+                },
+                "pluginVersion": "7.1.1",
+                "targets": [
+                    {
+                    "expr": "sum(kafka_server_brokertopicmetrics_bytes_out_total)",
+                    "instant": true,
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "A"
+                    }
+                ],
+                "timeFrom": null,
+                "timeShift": null,
+                "title": "Total output bytes",
+                "type": "stat"
+                },
+                {
+                "aliasColors": {},
+                "bars": false,
+                "dashLength": 10,
+                "dashes": false,
+                "datasource": "Observatorium-Metrics",
+                "description": "",
+                "fieldConfig": {
+                    "defaults": {
+                    "custom": {},
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                        {
+                            "color": "green",
+                            "value": null
+                        }
+                        ]
+                    },
+                    "unit": "Bps"
+                    },
+                    "overrides": []
+                },
+                "fill": 1,
+                "fillGradient": 0,
+                "gridPos": {
+                    "h": 4,
+                    "w": 6,
+                    "x": 18,
+                    "y": 20
+                },
+                "hiddenSeries": false,
+                "id": 34,
+                "legend": {
+                    "avg": false,
+                    "current": false,
+                    "max": false,
+                    "min": false,
+                    "show": false,
+                    "total": false,
+                    "values": false
+                },
+                "lines": true,
+                "linewidth": 1,
+                "nullPointMode": "null",
+                "percentage": false,
+                "pluginVersion": "7.1.1",
+                "pointradius": 2,
+                "points": false,
+                "renderer": "flot",
+                "seriesOverrides": [],
+                "spaceLength": 10,
+                "stack": false,
+                "steppedLine": false,
+                "targets": [
+                    {
+                    "expr": "sum(rate(kafka_server_brokertopicmetrics_bytes_out_total[1m])*60)",
+                    "instant": false,
+                    "interval": "",
+                    "legendFormat": "data",
+                    "refId": "A"
+                    }
+                ],
+                "thresholds": [],
+                "timeFrom": null,
+                "timeRegions": [],
+                "timeShift": null,
+                "title": "Ouput throughput",
+                "tooltip": {
+                    "shared": true,
+                    "sort": 0,
+                    "value_type": "individual"
+                },
+                "type": "graph",
+                "xaxis": {
+                    "buckets": null,
+                    "mode": "time",
+                    "name": null,
+                    "show": true,
+                    "values": []
+                },
+                "yaxes": [
+                    {
+                    "format": "Bps",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": "0",
+                    "show": true
+                    },
+                    {
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": false
+                    }
+                ],
+                "yaxis": {
+                    "align": false,
+                    "alignLevel": null
+                }
                 }
             ],
-            "refresh": "30s",
+            "refresh": false,
             "schemaVersion": 26,
             "style": "dark",
-            "tags": [
-                "kubernetes-mixin"
-            ],
+            "tags": [],
             "templating": {
-                "list": [
-                {
-                    "current": {
-                    "selected": true,
-                    "text": "stage-cluster",
-                    "value": "stage-cluster"
-                    },
-                    "hide": 0,
-                    "includeAll": false,
-                    "label": null,
-                    "multi": false,
-                    "name": "datasource",
-                    "options": [],
-                    "query": "prometheus",
-                    "queryValue": "",
-                    "refresh": 1,
-                    "regex": "",
-                    "skipUrlSync": false,
-                    "type": "datasource"
-                },
-                {
-                    "allValue": null,
-                    "current": {
-                    "isNone": true,
-                    "selected": false,
-                    "text": "None",
-                    "value": ""
-                    },
-                    "datasource": "$datasource",
-                    "definition": "label_values(kubelet_volume_stats_capacity_bytes, cluster)",
-                    "hide": 2,
-                    "includeAll": false,
-                    "label": "cluster",
-                    "multi": false,
-                    "name": "cluster",
-                    "options": [],
-                    "query": "label_values(kubelet_volume_stats_capacity_bytes, cluster)",
-                    "refresh": 2,
-                    "regex": "",
-                    "skipUrlSync": false,
-                    "sort": 1,
-                    "tagValuesQuery": "",
-                    "tags": [],
-                    "tagsQuery": "",
-                    "type": "query",
-                    "useTags": false
-                },
-                {
-                    "allValue": null,
-                    "current": {
-                    "selected": false,
-                    "text": "mk-test-user-e2e-primary-1pcgon2ywqjcnqzf8e5j9hnyvkl",
-                    "value": "mk-test-user-e2e-primary-1pcgon2ywqjcnqzf8e5j9hnyvkl"
-                    },
-                    "datasource": "$datasource",
-                    "definition": "",
-                    "hide": 0,
-                    "includeAll": true,
-                    "label": "Namespace",
-                    "multi": false,
-                    "name": "namespace",
-                    "options": [],
-                    "query": "label_values(kubelet_volume_stats_capacity_bytes{cluster=\"$cluster\", job=\"kubelet\"}, namespace)",
-                    "refresh": 2,
-                    "regex": "",
-                    "skipUrlSync": false,
-                    "sort": 1,
-                    "tagValuesQuery": "",
-                    "tags": [],
-                    "tagsQuery": "",
-                    "type": "query",
-                    "useTags": false
-                },
-                {
-                    "allValue": null,
-                    "current": {
-                    "selected": false,
-                    "text": "All",
-                    "value": "$__all"
-                    },
-                    "datasource": "$datasource",
-                    "definition": "label_values(kafka_server_brokertopicmetrics_bytes_in_total{cluster=\"$cluster\", namespace=\"$namespace\"}, topic)",
-                    "hide": 0,
-                    "includeAll": true,
-                    "label": "Topic",
-                    "multi": false,
-                    "name": "topic",
-                    "options": [],
-                    "query": "label_values(kafka_server_brokertopicmetrics_bytes_in_total{cluster=\"$cluster\", namespace=\"$namespace\"}, topic)",
-                    "refresh": 2,
-                    "regex": "",
-                    "skipUrlSync": false,
-                    "sort": 1,
-                    "tagValuesQuery": "",
-                    "tags": [],
-                    "tagsQuery": "",
-                    "type": "query",
-                    "useTags": false
-                }
-                ]
+                "list": []
             },
             "time": {
-                "from": "now-6h",
+                "from": "now-2d",
                 "to": "now"
             },
             "timepicker": {
@@ -519,21 +1161,10 @@ spec:
                 "1h",
                 "2h",
                 "1d"
-                ],
-                "time_options": [
-                "5m",
-                "15m",
-                "1h",
-                "6h",
-                "12h",
-                "24h",
-                "2d",
-                "7d",
-                "30d"
                 ]
             },
             "timezone": "",
-            "title": "Kafka BU usage",
-            "uid": "3aa63e28e57e5e48febcd3f5aead600e2c5afa9e",
-            "version": 10
+            "title": "BU usage (WIP) from Rob",
+            "uid": "prHiT9yGk",
+            "version": 21
             }
