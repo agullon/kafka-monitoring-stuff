@@ -25,7 +25,7 @@ spec:
                 }
                 ]
             },
-            "description": "Overview of Openshift and Kafka cluster for the Business Unit",
+            "description": "Overview of Openshift and Kafka clusters for the Business Unit",
             "editable": true,
             "gnetId": null,
             "graphTooltip": 0,
