@@ -30,7 +30,7 @@ spec:
             "gnetId": null,
             "graphTooltip": 0,
             "id": 13,
-            "iteration": 1615555793131,
+            "iteration": 1615906110773,
             "links": [],
             "panels": [
                 {
@@ -204,15 +204,15 @@ spec:
                     "showHeader": true,
                     "sortBy": [
                     {
-                        "desc": false,
-                        "displayName": "Namespace"
+                        "desc": true,
+                        "displayName": "Topics"
                     }
                     ]
                 },
                 "pluginVersion": "7.1.1",
                 "targets": [
                     {
-                    "expr": "label_replace(count(kafka_topic_partitions) by (namespace), \"namespace_short\", \"$2\", \"namespace\", \"(.*-|)(.*)\")",
+                    "expr": "count(kafka_topic_partitions) by (namespace)",
                     "format": "table",
                     "instant": false,
                     "interval": "",
@@ -220,7 +220,7 @@ spec:
                     "refId": "A"
                     },
                     {
-                    "expr": "label_replace(sum(kafka_topic_partition_current_offset) by (namespace), \"namespace_short\", \"$2\", \"namespace\", \"(.*-|)(.*)\")",
+                    "expr": "sum(kafka_topic_partition_current_offset) by (namespace)",
                     "format": "table",
                     "instant": false,
                     "interval": "",
@@ -228,7 +228,7 @@ spec:
                     "refId": "B"
                     },
                     {
-                    "expr": "label_replace(sum(kube_pod_info{namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\",namespace !~ \".*minio.*\"}) by (namespace), \"namespace_short\", \"$2\", \"namespace\", \"(.*-|)(.*)\")",
+                    "expr": "sum(kube_pod_info{namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\",namespace !~ \".*minio.*\"}) by (namespace)",
                     "format": "table",
                     "instant": false,
                     "interval": "",
@@ -236,7 +236,7 @@ spec:
                     "refId": "C"
                     },
                     {
-                    "expr": "label_replace(sum(kafka_topic_partitions{namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\", namespace !~ \".*minio.*\"}) by (namespace), \"namespace_short\", \"$2\", \"namespace\", \"(.*-|)(.*)\")",
+                    "expr": "sum(kafka_topic_partitions{namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\", namespace !~ \".*minio.*\"}) by (namespace)",
                     "format": "table",
                     "instant": false,
                     "interval": "",
@@ -244,7 +244,7 @@ spec:
                     "refId": "D"
                     },
                     {
-                    "expr": "label_replace(sum(increase(container_network_transmit_bytes_total{container!= \"\",namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\",namespace !~ \".*minio.*\"}[$__range])) by (namespace), \"namespace_short\", \"$2\", \"namespace\", \"(.*-|)(.*)\")",
+                    "expr": "sum(increase(container_network_transmit_bytes_total{container!= \"\",namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\",namespace !~ \".*minio.*\"}[$__range])) by (namespace)",
                     "format": "table",
                     "instant": false,
                     "interval": "",
@@ -252,7 +252,7 @@ spec:
                     "refId": "E"
                     },
                     {
-                    "expr": "label_replace(sum(increase(container_network_receive_bytes_total{container!= \"\",namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\",namespace !~ \".*minio.*\"}[$__range])) by (namespace), \"namespace_short\", \"$2\", \"namespace\", \"(.*-|)(.*)\")",
+                    "expr": "sum(increase(container_network_receive_bytes_total{container!= \"\",namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\",namespace !~ \".*minio.*\"}[$__range])) by (namespace)",
                     "format": "table",
                     "instant": false,
                     "interval": "",
@@ -295,7 +295,7 @@ spec:
                     {
                     "id": "seriesToColumns",
                     "options": {
-                        "byField": "namespace_short"
+                        "byField": "Namespace"
                     }
                     },
                     {
@@ -305,8 +305,8 @@ spec:
                         "mode": "reduceRow",
                         "reduce": {
                         "include": [
-                            "Network Receive Bytes (24h)",
-                            "Network Transmit Bytes (24h)"
+                            "Network Transmit Bytes (24h)",
+                            "Network Receive Bytes (24h)"
                         ],
                         "reducer": "sum"
                         },
@@ -317,7 +317,7 @@ spec:
                     "id": "organize",
                     "options": {
                         "excludeByName": {
-                        "Namespace": true,
+                        "Namespace": false,
                         "Network Transmit Bytes (24h)": false,
                         "namespace_short": false
                         },
@@ -418,11 +418,11 @@ spec:
                 "steppedLine": false,
                 "targets": [
                     {
-                    "expr": "label_replace(sum(increase(container_network_transmit_bytes_total{container!= \"\",namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\",namespace !~ \".*minio.*\"}[$__range])) by (namespace), \"namespace_short\", \"$2\", \"namespace\", \"(.*-|)(.*)\")",
+                    "expr": "topk(10,sum(increase(container_network_transmit_bytes_total{container!= \"\",namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\",namespace !~ \".*minio.*\"}[$__range])) by (namespace))",
                     "format": "time_series",
                     "instant": false,
                     "interval": "",
-                    "legendFormat": "{{namespace_short}}",
+                    "legendFormat": "{{namespace}}",
                     "refId": "A"
                     }
                 ],
@@ -430,7 +430,7 @@ spec:
                 "timeFrom": null,
                 "timeRegions": [],
                 "timeShift": null,
-                "title": "Network Transmit Throughput (Bytes)",
+                "title": "Network Transmit Throughput (Bytes) [top 10]",
                 "tooltip": {
                     "shared": true,
                     "sort": 0,
@@ -456,7 +456,7 @@ spec:
                     "label": null,
                     "logBase": 1,
                     "max": null,
-                    "min": null,
+                    "min": "0",
                     "show": true
                     },
                     {
@@ -465,7 +465,7 @@ spec:
                     "logBase": 1,
                     "max": null,
                     "min": null,
-                    "show": true
+                    "show": false
                     }
                 ],
                 "yaxis": {
@@ -543,11 +543,11 @@ spec:
                 "steppedLine": false,
                 "targets": [
                     {
-                    "expr": "label_replace(sum(increase(container_network_receive_bytes_total{container!= \"\",namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\",namespace !~ \".*minio.*\"}[$__range])) by (namespace) , \"namespace_short\", \"$2\", \"namespace\", \"(.*-|)(.*)\")",
+                    "expr": "topk(10, sum(increase(container_network_receive_bytes_total{container!= \"\",namespace !~\"openshift.*\", namespace !~\".*monitor.*\", namespace !~\".*operator.*\",namespace !~\".*obser.*\",namespace !~ \".*logging.*\",namespace !~ \".*minio.*\"}[$__range])) by (namespace))",
                     "format": "time_series",
                     "instant": false,
                     "interval": "",
-                    "legendFormat": "{{namespace_short}}",
+                    "legendFormat": "{{namespace}}",
                     "refId": "A"
                     }
                 ],
@@ -555,7 +555,7 @@ spec:
                 "timeFrom": null,
                 "timeRegions": [],
                 "timeShift": null,
-                "title": "Network Receive Throughput (Bytes)",
+                "title": "Network Receive Throughput (Bytes) [top10]",
                 "tooltip": {
                     "shared": true,
                     "sort": 0,
@@ -581,7 +581,7 @@ spec:
                     "label": null,
                     "logBase": 1,
                     "max": null,
-                    "min": null,
+                    "min": "0",
                     "show": true
                     },
                     {
@@ -590,7 +590,7 @@ spec:
                     "logBase": 1,
                     "max": null,
                     "min": null,
-                    "show": true
+                    "show": false
                     }
                 ],
                 "yaxis": {
@@ -657,7 +657,7 @@ spec:
                 "pluginVersion": "7.1.1",
                 "targets": [
                     {
-                    "expr": "sum(count(cluster_version{type=\"completed\"}) by (version,cluster_id) * on (cluster_id) group_left () count(subscription_sync_total{installed=~\"^strimzi.*$\"}) by (cluster_id))",
+                    "expr": "sum(count(count(cluster_version{type=\"completed\"}) by (version, cluster_id) * on (cluster_id) group_left () strimzi_resources{kind=~\"Kafka\"}) by (cluster_id))",
                     "format": "time_series",
                     "instant": false,
                     "interval": "",
@@ -709,13 +709,10 @@ spec:
                 "hiddenSeries": false,
                 "id": 26,
                 "legend": {
-                    "alignAsTable": false,
                     "avg": false,
                     "current": false,
-                    "hideEmpty": false,
                     "max": false,
                     "min": false,
-                    "rightSide": false,
                     "show": false,
                     "total": false,
                     "values": false
@@ -734,12 +731,11 @@ spec:
                 "steppedLine": false,
                 "targets": [
                     {
-                    "expr": "sum(count(cluster_version{type=\"completed\"}) by (version,cluster_id) * on (cluster_id) group_left () count(subscription_sync_total{installed=~\"^strimzi.*$\"}) by (cluster_id))",
-                    "instant": false,
+                    "expr": "sum(count(count(cluster_version{type=\"completed\"}) by (version, cluster_id) * on (cluster_id) group_left () strimzi_resources{kind=~\"Kafka\"}) by (cluster_id))",
+                    "hide": false,
                     "interval": "",
-                    "intervalFactor": 1,
-                    "legendFormat": "clusters",
-                    "refId": "A"
+                    "legendFormat": "",
+                    "refId": "B"
                     }
                 ],
                 "thresholds": [],
@@ -752,6 +748,18 @@ spec:
                     "sort": 0,
                     "value_type": "individual"
                 },
+                "transformations": [
+                    {
+                    "id": "organize",
+                    "options": {
+                        "excludeByName": {},
+                        "indexByName": {},
+                        "renameByName": {
+                        "Value": "Clusters"
+                        }
+                    }
+                    }
+                ],
                 "type": "graph",
                 "xaxis": {
                     "buckets": null,
@@ -762,11 +770,12 @@ spec:
                 },
                 "yaxes": [
                     {
+                    "decimals": 0,
                     "format": "none",
                     "label": null,
                     "logBase": 1,
                     "max": null,
-                    "min": null,
+                    "min": "0",
                     "show": true
                     },
                     {
@@ -1040,7 +1049,7 @@ spec:
                     "expr": "sum(strimzi_resources{kind=~\"Kafka\"})",
                     "instant": false,
                     "interval": "",
-                    "legendFormat": "created",
+                    "legendFormat": "Clusters",
                     "refId": "A"
                     }
                 ],
@@ -1122,7 +1131,7 @@ spec:
                 ]
             },
             "timezone": "",
-            "title": "BU Usage",
+            "title": "MK - Usage",
             "uid": "prHiT9yGk",
-            "version": 4
+            "version": 14
             }
