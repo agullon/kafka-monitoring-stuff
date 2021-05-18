@@ -1,5 +1,8 @@
+export OBSERVATORIUM_APPS_URL := $(shell oc get --namespace openshift-ingress-operator ingresscontrollers/default --output jsonpath='{.status.domain}{"\n"}')
 export DEX_TOKEN_URL := http://dex-dex.$(OBSERVATORIUM_APPS_URL)
-export GATEWAY_URL := https://observatorium-observatorium.$(OBSERVATORIUM_APPS_URL)
+export OBSERVATORIUM_ROUTE_HOST ?=observatorium-observatorium.$(OBSERVATORIUM_APPS_URL)
+export GATEWAY_URL := https://$(OBSERVATORIUM_ROUTE_HOST)
+
 export LOG_SCRAPE_NAMESPACES ?= '$(STRIMZI_OPERATOR_NAMESPACE)','$(KAFKA_CLUSTER_NAMESPACE)'
 export METRICS_SCRAPE_NAMESPACES ?= '$(STRIMZI_OPERATOR_NAMESPACE)','$(KAFKA_CLUSTER_NAMESPACE)'
 
@@ -31,10 +34,21 @@ create/cr:
 	@echo "create observatorium in: $(OBSERVATORIUM_NAMESPACE)"
 	@sed 's/<namespace>/$(OBSERVATORIUM_NAMESPACE)/g' ./observatorium.yaml | cat | oc apply -f -
 
+.PHONY: create/cr-multitenant
+create/cr-multitenant:
+	@echo "create multitenant observatorium in: $(OBSERVATORIUM_NAMESPACE)"
+	@sed 's/<namespace>/$(OBSERVATORIUM_NAMESPACE)/g' ./observatorium-multitenant.yaml | cat | oc apply -f -
+
+.PHONY: create/dex-multitenant-secret
+create/dex-multitenant-secret:
+	@echo "Updating dex config secret in:  $(DEX_NAMESPACE) for multitenancy"
+	oc delete secret dex -n $(DEX_NAMESPACE);oc create secret generic dex --from-file=config.yaml=./config-multitenant.yaml -n $(DEX_NAMESPACE) --dry-run -o yaml|oc apply -f -
+	oc delete pod -l app.kubernetes.io/name=dex -n $(DEX_NAMESPACE)
+
 .PHONY: create/route
 create/route:
-	@echo "create route"
-	@sed 's/<namespace>/$(OBSERVATORIUM_NAMESPACE)/g' ./route.yaml | cat | oc apply -f -
+	@echo "create route $(OBSERVATORIUM_ROUTE_HOST) in $(OBSERVATORIUM_NAMESPACE) namespace"
+	@sed 's/<namespace>/$(OBSERVATORIUM_NAMESPACE)/g;s/<hosturl>/$(OBSERVATORIUM_ROUTE_HOST)/g' ./route.yaml | cat | oc apply -f -
 
 setup:
 	@echo "updating promtail config to point to $(GATEWAY_URL)"
@@ -69,4 +83,7 @@ clean:
 	@echo "Done uninstalling observatorium"
 
 all: create/dex create/minio create/crds create/operator create/cr create/route
+	@echo "Done installing observatorium"
+
+all-multitenant: create/dex create/minio create/crds create/operator create/cr create/cr-multitenant create/dex-multitenant-secret create/route
 	@echo "Done installing observatorium"

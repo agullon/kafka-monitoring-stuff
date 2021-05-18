@@ -1,4 +1,4 @@
-apiVersion: kafka.strimzi.io/v1beta1
+apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
   name: <NAME>
@@ -8,8 +8,7 @@ spec:
     version: 2.6.0
     replicas: 3
     listeners:
-      external:
-        overrides:
+      - configuration:
           bootstrap:
             host: <NAME>-<UUID>.<CLUSTER_DOMAIN_NAME>
           brokers:
@@ -19,9 +18,10 @@ spec:
               host: broker-1-<NAME>-<UUID>.<CLUSTER_DOMAIN_NAME>
             - broker: 2
               host: broker-2-<NAME>-<UUID>.<CLUSTER_DOMAIN_NAME>
+        name: external
+        port: 9094
         type: route
-      plain: {}
-      tls: {}
+        tls: false
     storage:
       type: jbod
       volumes:

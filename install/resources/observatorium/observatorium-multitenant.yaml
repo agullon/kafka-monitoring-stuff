@@ -85,14 +85,20 @@ spec:
     image: 'quay.io/observatorium/observatorium:master-2020-11-02-v0.1.1-192-ge324057'
     rbac:
       roleBindings:
-        - name: test
+        - name: tenant1
           roles:
-            - read-write
+            - tenant1
+          subjects:
+            - kind: user
+              name: tenant1@example.com
+        - name: tenant2
+          roles:
+            - tenant2
           subjects:
             - kind: user
               name: admin@example.com
       roles:
-        - name: read-write
+        - name: tenant1
           permissions:
             - read
             - write
@@ -100,14 +106,30 @@ spec:
             - logs
             - metrics
           tenants:
-            - test
+            - tenant1
+        - name: tenant2
+          permissions:
+            - read
+            - write
+          resources:
+            - logs
+            - metrics
+          tenants:
+            - tenant2
     replicas: 1
     tenants:
       - id: 1610b0c3-c509-4592-a256-a1871353dbfa
-        name: test
+        name: tenant1
         oidc:
-          clientID: test
+          clientID: tenant1
           clientSecret: ZXhhbXBsZS1hcHAtc2VjcmV0
+          issuerURL: 'http://dex.dex.svc.cluster.local:5556/dex'
+          usernameClaim: email
+      - id: b10586b6-6ef5-4e40-a4eb-6b37447ee5cc
+        name: tenant2
+        oidc:
+          clientID: tenant2
+          clientSecret: dGVuYW50Mi1wYXNzCg==
           issuerURL: 'http://dex.dex.svc.cluster.local:5556/dex'
           usernameClaim: email
     tls:
